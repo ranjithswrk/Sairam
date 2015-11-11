@@ -1,53 +1,104 @@
 package TestCases;
 
-import org.openqa.selenium.WebDriver;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
-import pageObjectModel.BookCart_POM;
-import pageObjectModel.Login_POM;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 public class BookCart_TestCase {
 	
-	@Test(dataProvider = "add_cart_DP",dataProviderClass=DataProvider.DP_BookCart.class)
-	public void add2Cart(String TC_ID, String Uname,String Pwd, String Search_Book, String Quantity, String Exp_Res) throws Exception
-	{
-		System.out.println(TC_ID+";"+Uname+";"+Pwd+";"+Search_Book+";"+Quantity+";"+Exp_Res);
-		LoginTestcase login_component = new LoginTestcase();
-		Login_POM login_pom = login_component.comm_component_login(Uname, Pwd);
-		WebDriver driver = login_pom.getbrowser();
-		BookCart_POM book_pom = new BookCart_POM();
-		book_pom.Setbrowservalue(driver);
-		book_pom.Entertext_Searchbox(Search_Book);
-		book_pom.Click_button_Searchbook();
-		book_pom.Click_img_firstbooksearch();
-		book_pom.Click_button_BuyNow();
-		String actual = book_pom.gettext_cartresult();
-		Assert.assertEquals(actual, Exp_Res);
-		book_pom.Click_linktext_rediffcom();
-		book_pom.Window_popup_handler();
-		book_pom.Click_linktext_SignOut();
-		book_pom.Close_browser();
+	WebDriver driver ;
+	
+	String expected = null;
+	
+	
+	@BeforeSuite
+	
+	public void suite(){
+		System.setProperty("webdriver.chrome.driver", 
+	            "C:\\Users\\RE041943\\Desktop\\information\\Training\\selenium\\Selenium Installers\\To_Work_with_chrome_broswer\\chromedriver.exe"); 
+	 driver = new ChromeDriver();
+	
+		
+		
 	}
-	@Test(dataProvider = "updatecart",dataProviderClass=DataProvider.DP_BookCart.class)
-	public void updatecart(String TC_ID, String Uname,String Pwd, String Search_Book, String Quantity, String Exp_Res) throws Exception
-	{
-		System.out.println(TC_ID+";"+Uname+";"+Pwd+";"+Search_Book+";"+Quantity+";"+Exp_Res);
-		LoginTestcase login_component = new LoginTestcase();
-		Login_POM login_pom = login_component.comm_component_login(Uname, Pwd);
-		WebDriver driver = login_pom.getbrowser();
-		BookCart_POM book_pom = new BookCart_POM();
-		book_pom.Setbrowservalue(driver);
-		book_pom.Entertext_Searchbox(Search_Book);
-		book_pom.Click_button_Searchbook();
-		book_pom.Click_img_firstbooksearch();
-		book_pom.Click_button_BuyNow();
-		String actual = book_pom.gettext_cartresult();
-		Assert.assertEquals(actual, Exp_Res);
-		book_pom.Click_linktext_rediffcom();
-		book_pom.Window_popup_handler();
-		book_pom.Click_linktext_SignOut();
-		book_pom.Close_browser();
+	
+	
+	@BeforeTest
+	
+	public void launch(){
+	
+	   
+	 driver.get("http:\\www.newtours.demoaut.com/");
+	 
 	}
-
+	
+  @Test
+  public void register() {
+	  
+	  
+	  driver.findElement(By.linkText("REGISTER")).click();
+	  
+	  
+	  expected = "Register: Mercury Tours";
+	  
+	 String actual =driver.getTitle();
+	 
+	 Assert.assertEquals(expected, actual);
+	 
+  }
+  
+  @Test
+  
+	 public void support() {
+		 driver.findElement(By.linkText("SIGN-ON")).click();
+		  expected = "Sign-on: Mercury Tours";
+		  
+		 String actual =driver.getTitle();
+		 
+		 Assert.assertEquals(expected, actual);
+	 
+	 
+	 
+	   }
+  
+  @BeforeMethod
+	 
+	 public void homepage() {
+		 
+		 expected = "Welcome: Mercury Tours";
+		 
+		 String actual =driver.getTitle();
+		 
+		 Assert.assertEquals(expected, actual);
+		 
+		 
+		
+	 }
+  
+  @AfterMethod
+	 
+	 public void gobackhomepage() {
+		 
+		 driver.findElement(By.linkText("Home")).click();
+		 
+	
+		
+	 }
+  
+  @AfterTest
+  
+  
+  public void close(){
+	  
+	  driver.quit();
+  }
 }
